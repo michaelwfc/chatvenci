@@ -2,6 +2,9 @@
   "workbench.settings.editor": "json",
   "terminal.integrated.defaultProfile.windows": "Git Bash",
   "terminal.integrated.fontSize": 12,
+  "terminal.integrated.env.windows": {
+    "PYTHONPATH": "${workspaceFolder}${pathSeparator}src"
+  },
   // Specifies an optional working directory for tests.
   // "python.defaultInterpreterPath": "C:\\Users\\Administrator\\miniconda3\\envs\\py39",
   "python.testing.cwd": "src/",
