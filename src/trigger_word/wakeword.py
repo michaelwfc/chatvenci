@@ -32,18 +32,23 @@ class PicoWakeWord():
 
 
 
-    def detect_wake_word(self):
+    def listen(self):
         print(f"detecting PICOVOICE wakeword model")
         while True:
-            audio_obj = self.stream.read(self.porcupine.frame_length, exception_on_overflow=False)
-            audio_obj_unpacked =  struct.unpack_from("h" * self.porcupine.frame_length, audio_obj)
-
-            keyword_index = self.porcupine.process(audio_obj_unpacked)
+            keyword_index = self.detect_wake_word()
             if keyword_index >=0:
                 print(f"我听到了 keyword_index={keyword_index}")
                 # return keyword_index
 
+    
+    def detect_wake_word(self)-> int:
+        audio_obj = self.stream.read(self.porcupine.frame_length, exception_on_overflow=False)
+        audio_obj_unpacked =  struct.unpack_from("h" * self.porcupine.frame_length, audio_obj)
+
+        keyword_index = self.porcupine.process(audio_obj_unpacked)
+        return keyword_index
+
 
 if __name__ == '__main__':
     pico_wake_word =PicoWakeWord()
-    pico_wake_word.detect_wake_word()
+    pico_wake_word.run()

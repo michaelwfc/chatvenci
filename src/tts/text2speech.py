@@ -27,10 +27,10 @@ class EdgeTTS:
         communicate = Communicate(text, self.voice)
         await communicate.save('./temp/audio.mp3')
         # playsound('./audio.wav') # playsound无法运行时删去此行改用pygame，若正常运行择一即可
-        self.play_audio_with_pygame('./temp/audio.mp3')  # 注意pygame只能识别mp3格式
+        self._play_audio_with_pygame('./temp/audio.mp3')  # 注意pygame只能识别mp3格式
 
 
-    def play_audio_with_pygame(self, audio_file_path):
+    def _play_audio_with_pygame(self, audio_file_path):
         pygame.mixer.init()
         pygame.mixer.music.load(audio_file_path)
         pygame.mixer.music.play()
@@ -43,3 +43,9 @@ class EdgeTTS:
         voices = await VoicesManager.create()
         voice = voices.find(Gender="Female", Language="zh") 
         return voice
+
+
+if __name__ == '__main__':
+    edgetts = EdgeTTS()
+    asyncio.run(edgetts.text_to_speech_and_play(
+        "嗯，你好，我是你的智能小伙伴，我的名字叫 芬奇，你可以和我畅所欲言，我是很会聊天的哦！"))

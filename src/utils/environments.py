@@ -46,6 +46,8 @@ def set_gpt_env(use_openai=False,use_azure_openai=False, use_vicuna=False,
     if set_proxy:
         os.environ["http_proxy"] = "http://127.0.0.1:7890"
         os.environ["https_proxy"] = ""
+        http_proxy = os.environ["http_proxy"]
+        print(f"http_proxy={http_proxy}")
 
     env_variables = load_env_variables_from_dotenv()
 

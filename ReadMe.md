@@ -9,7 +9,16 @@
 - https://github.com/MedalCollector/Orator
 
 
-
+# Features
+- Voice chatbot
+- Play online music
+- Search and Play local music
+- Retrival based QA
+- Teach English 
+- Tell Story for childrend
+- Query Weather
+- News
+- IOT to other device
 
 
 

@@ -17,14 +17,14 @@ class Speech2Text():
         self.temp_wav_file = os.path.join("temp","speech.wav")
         self.recognizer = sr.Recognizer()
 
-        self.GOOGLE_CLOUD_SPEECH_CREDENTIALS = str(os.path.join("data","cool-eye-269214-53f90e6f9d71.json"))
+        self.GOOGLE_CLOUD_SPEECH_CREDENTIALS = str(os.path.join("temp","cool-eye-269214-53f90e6f9d71.json"))
        
         self.language="zh-CN"
 
         # self.model = self._load_whispercpp_model()
 
     
-    def speech_to_text( self, sample_rate=16000):
+    def record_and_transcribe( self, sample_rate=16000)->Text:
         audio_data =self._record(sample_rate=sample_rate)
         text =  self._transcribe(audio_data)
         return text
@@ -71,7 +71,7 @@ class Speech2Text():
             text = self.recognizer.recognize_google_cloud(audio_data, 
                                                           credentials_json= self.GOOGLE_CLOUD_SPEECH_CREDENTIALS,
                                                           language=self.language)
-            print(f"Google Cloud Speech thinks you said:\n{text} ")
+            print(f"Google Cloud Speech thinks you said:\n{text}\n{'*'*100}")
 
         except sr.UnknownValueError:
             print("Google Cloud Speech could not understand audio")
@@ -132,12 +132,16 @@ def _get_file_content(file_name):
     
 
 if __name__ == '__main__':
-    model_path = "models/whispercpp/ggml-tiny.en.bin"
-    audio_path = os.path.join("tutorials","whisper_cpp","samples","jfk.wav") # pathlib.Path(audio_path)
+
+    # model_path = "models/whispercpp/ggml-tiny.en.bin"
+    # audio_path = os.path.join("tutorials","whisper_cpp","samples","jfk.wav") # pathlib.Path(audio_path)
+
+    from utils.environments import set_gpt_env
+    set_gpt_env()
   
 
     speech2text = Speech2Text()
-    speech2text.speech_to_text()
+    speech2text.record_and_transcribe()
     
 
 
