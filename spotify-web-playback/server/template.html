@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- https://developer.spotify.com/documentation/web-playback-sdk/tutorials/getting-started -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Web App</title>
+</head>
+
+<body>
+    <button id="togglePlay">Toggle Play</button>
+
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script>
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            const token = 'BQCQhDhsNUwjiGAhEhZevFVjAZ80M_QGr22Yqm9aXgdLNsbd3TxreeqHfAHTfajv6HdXLEUeDnsve-0fxO-wi_wEfMqi4r0oEichqLDZbciYHjMfc0Q';
+
+            const player = new Spotify.Player({
+                name: 'Web Playback SDK Player',
+                getOAuthToken: cb => { cb(token); },
+                volume: 0.5
+            });
+
+            // player.addListener('ready', ({ device_id }) => {
+            //     console.log('Ready with Device ID', device_id);
+            //     // Play a track
+            //     player._options.getOAuthToken(token => {
+            //         fetch('https://api.spotify.com/v1/me/player/play', {
+            //             method: 'PUT',
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'Authorization': `Bearer ${token}`
+            //             },
+            //             body: JSON.stringify({ uris: ['spotify:track:YOUR_TRACK_URI'] })
+            //         });
+            //     });
+            // });
+
+            // Ready
+            player.addListener('ready', ({ device_id }) => {
+                console.log('Ready with Device ID', device_id);
+            });
+
+            // Not Ready
+            player.addListener('not_ready', ({ device_id }) => {
+                console.log('Device ID has gone offline', device_id);
+            });
+
+            player.addListener('initialization_error', ({ message }) => {
+                console.error(message);
+            });
+
+            player.addListener('authentication_error', ({ message }) => {
+                console.error(message);
+            });
+
+            player.addListener('account_error', ({ message }) => {
+                console.error(message);
+            });
+
+            document.getElementById('togglePlay').onclick = function () {
+                player.togglePlay();
+            };
+
+            player.connect();
+        };
+    </script>
+</body>
+
+</html>
