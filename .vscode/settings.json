@@ -5,6 +5,7 @@
   "terminal.integrated.env.windows": {
     "PYTHONPATH": "${workspaceFolder}${pathSeparator}src"
   },
+  "files.autoSaveWhenNoErrors": true,
   // Specifies an optional working directory for tests.
   // "python.defaultInterpreterPath": "C:\\Users\\Administrator\\miniconda3\\envs\\py39",
   "python.testing.cwd": "src/",

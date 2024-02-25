@@ -11,9 +11,11 @@
 
 # Features
 - Voice chatbot
-- Play online music
+- Play online music : spotify
 - Search and Play local music
 - Retrival based QA
+    - https://github.com/QuivrHQ/quivr
+    
 - Teach English 
 - Tell Story for childrend
 - Query Weather

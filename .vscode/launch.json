@@ -30,5 +30,22 @@
         //         "PYTHONPATH": "${workspaceFolder}${pathSeparator}Langchain-Chatchat"
         //     }
         // }
+        {
+            "name": "node debugger current file",
+            "type": "node",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "env": {
+                "NODE_OPTIONS": "--openssl-legacy-provider"
+            }
+        },
+        {
+            "name": "Lannch Chrome against localhost",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}${pathSeparator}spotify-web-playback"
+        }
     ]
 }
