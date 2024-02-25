@@ -1,3 +1,40 @@
+# Extensions in VScode
+- Tabnine
+
+# Debug JavaScript
+1. start the node debugger server on port 5000
+setting the languch.json for debugger node.js
+languch node debuge on server/index.js
+2. start the react app debugger on port 3000
+setting the languch.json for languch chrom against on localhost
+npm start
+languch chrom against on localhost
+
+
+# [spotify-web-playback-sdk-example](https://github.com/spotify/spotify-web-playback-sdk-example/tree/main)
+## Issue
+-- ["error:0308010C:digital envelope routines::unsupported"](https://github.com/spotify/spotify-web-playback-sdk-example/issues/9)
+export NODE_OPTIONS="--openssl-legacy-provider"
+OR
+setting launch.json
+"env":{
+                "NODE_OPTIONS":"--openssl-legacy-provider"
+            }
+
+
+#  spotify-web-api-node
+[How To Build A Better Spotify With React](https://www.youtube.com/watch?v=Xcet6msf3eE)
+[spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node)
+npm i spotify-web-api-node
+
+## Issues:
+- servre.js : blocked by CORS policy
+Access to XMLHttpRequest at 'http://localhost:3001/' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+npm i cors
+
+- req.body.code: TypeError: Cannot read properties of undefined (reading 'code')
+npm i body-parser
+----------------------------------------------------------------
 # Web Playback SDK Javascript Tutorial
 
 This repository contains the source code for the [Web Playback SDK Guide](https://developer.spotify.com/documentation/web-playback-sdk/guide/).
