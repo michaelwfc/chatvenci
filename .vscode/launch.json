@@ -36,9 +36,9 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "env": {
-                "NODE_OPTIONS": "--openssl-legacy-provider"
-            }
+            // "env": {
+            //     "NODE_OPTIONS": "--openssl-legacy-provider"
+            // }
         },
         {
             "name": "Lannch Chrome against localhost",

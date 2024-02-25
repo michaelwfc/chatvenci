@@ -1,7 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css"
+import Login from './Login'
+import Dashboard from './Dashboard';
+
+// get the code from response url
+const code = new URLSearchParams(window.location.search).get('code');
+
+
 
 function App() {
+  return code ? <Dashboard code={code} /> : <Login />
+}
+
+export default App;
+
+
+
+/* function App() {
   return (
     <div className="App">
       <header className="App-header">
@@ -22,4 +36,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; */
