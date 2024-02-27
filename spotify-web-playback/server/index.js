@@ -48,7 +48,7 @@ global.access_token = ''
 dotenv.config()
 
 var spotify_client_id = "f49b7a0661594518ad9cf26710e53038" //process.env.SPOTIFY_CLIENT_ID
-var spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET
+var spotify_client_secret = "04fae29af5594855bc4eec7a271d5240" // process.env.SPOTIFY_CLIENT_SECRET
 
 var app = express();
 
@@ -101,7 +101,7 @@ app.get('/auth/callback', (req, res) => {
 
   var authOptions = {
     url: API_TOKEN_URL,
-    proxy: proxyUrl,
+    proxy: proxyUrl, // add explict proxy 
     form: {
       code: code,
       redirect_uri: spotify_redirect_uri,
