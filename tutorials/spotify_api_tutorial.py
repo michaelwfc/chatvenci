@@ -15,22 +15,6 @@ class SpotifyWebAPIBot():
         self.artist_url ="https://api.spotify.com/v1/artists/"
 
         # Authenticate and obtain access token
-    def _get_access_token(self):
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        auth_response = requests.post('https://accounts.spotify.com/api/token', 
-                                      data =  {
-            'grant_type': 'client_credentials',
-            'client_id': self.client_id,
-            'client_secret': self.client_secrect,
-        
-        },
-        headers=headers
-        
-        )
-
-        auth_response_data = auth_response.json()
-        access_token = auth_response_data['access_token']
-        return access_token
     
 
     def _build_header(self, access_token):
@@ -50,8 +34,6 @@ class SpotifyWebAPIBot():
         artist_data =  requests.post(self.artist_url,params=artist,headers=headers).json()
         print(f"artist_data={artist_data}")
         return artist_data
-
-
 
 
     # Play a track

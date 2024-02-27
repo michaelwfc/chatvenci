@@ -56,6 +56,9 @@ if __name__ == '__main__':
     set_gpt_env(set_proxy=False)
     client_id =os.getenv(SPOTIFY_CLIENT_ID)
     client_secrect = os.getenv(SPOTIFY_CLIENT_SECRET)
+
+    
+    print(f"client_id={client_id}, client_secrect={client_secrect}")
     access_token =  get_access_token(client_id=client_id, client_secret=client_secrect)
     print(f"access_token={access_token}")
     

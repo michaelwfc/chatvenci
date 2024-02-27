@@ -51,6 +51,9 @@ def set_gpt_env(use_openai=False,use_azure_openai=False, use_vicuna=False,
 
     env_variables = load_env_variables_from_dotenv()
 
+    http_proxy = env_variables.get("http_proxy")
+    https_proxy = env_variables.get("https_proxy")
+    print(f"http_proxy={http_proxy}\nhttps_proxy={https_proxy}")
     # set working dir
     # os.chdir(WORKING_DIR)
     # logger.info(f"working_dir={WORKING_DIR}")
