@@ -19,8 +19,8 @@ dotenv.config();
 const request = require('request');
 
 
-var spotify_client_id = "52eca94ab8c44a3ba96a8d4e30e858ad" //process.env.SPOTIFY_CLIENT_ID
-var spotify_client_secret = "6c3bb6bbc4c64fd0b640f4941fb070c9"//process.env.SPOTIFY_CLIENT_SECRET
+var spotify_client_id = process.env.SPOTIFY_CLIENT_ID
+var spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET
 
 // Proxy configuration
 const proxyUrl = 'http://127.0.0.1:7890';
