@@ -1,17 +1,21 @@
 'use strict';
 
-var superagent = require('superagent'),
-  { TimeoutError, 
-    WebapiError, 
-    WebapiRegularError, 
-    WebapiAuthenticationError,
-    WebapiPlayerError 
-  } =  require('./response-error');
+
+var superagent = require('superagent')
+// extend with Request#proxy() https://www.npmjs.com/package/superagent-proxy
+require('superagent-proxy')(superagent);
+
+var { TimeoutError,
+  WebapiError,
+  WebapiRegularError,
+  WebapiAuthenticationError,
+  WebapiPlayerError
+} = require('./response-error');
 
 var HttpManager = {};
 
-/* Create superagent options from the base request */
-var _getParametersFromRequest = function(request) {
+/* Create superagent o.proxyproxy;tions from the base request */
+var _getParametersFromRequest = function (request) {
   var options = {};
 
   if (request.getQueryParameters()) {
@@ -27,10 +31,15 @@ var _getParametersFromRequest = function(request) {
   if (request.getHeaders()) {
     options.headers = request.getHeaders();
   }
+  // add proxy to options
+  if (request.getProxy()) {
+    options.proxy = request.getProxy();
+  }
+
   return options;
 };
 
-var _toError = function(response) {
+var _toError = function (response) {
   if (typeof response.body === 'object' && response.body.error && typeof response.body.error === 'object' && response.body.error.reason) {
     return new WebapiPlayerError(response.body, response.headers, response.statusCode);
   }
@@ -42,13 +51,14 @@ var _toError = function(response) {
   if (typeof response.body === 'object' && response.body.error && typeof response.body.error === 'string') {
     return new WebapiAuthenticationError(response.body, response.headers, response.statusCode);
   }
-  
+
   /* Other type of error, or unhandled Web API error format */
   return new WebapiError(response.body, response.headers, response.statusCode, response.body);
 };
 
 /* Make the request to the Web API */
-HttpManager._makeRequest = function(method, options, uri, callback) {
+HttpManager._makeRequest = function (method, options, uri, callback) {
+  // same as var request = require('superagent');
   var req = method.bind(superagent)(uri);
 
   if (options.query) {
@@ -59,11 +69,16 @@ HttpManager._makeRequest = function(method, options, uri, callback) {
     req.set(options.headers);
   }
 
+  // set proxy for request
+  if (options.proxy) {
+    req.proxy(options.proxy);
+  };
+
   if (options.data) {
     req.send(options.data);
   }
 
-  req.end(function(err, response) {
+  req.end(function (err, response) {
     if (err) {
       if (err.timeout) {
         return callback(new TimeoutError());
@@ -87,7 +102,7 @@ HttpManager._makeRequest = function(method, options, uri, callback) {
  * @param {BaseRequest} The request.
  * @param {Function} The callback function.
  */
-HttpManager.get = function(request, callback) {
+HttpManager.get = function (request, callback) {
   var options = _getParametersFromRequest(request);
   var method = superagent.get;
 
@@ -99,7 +114,7 @@ HttpManager.get = function(request, callback) {
  * @param {BaseRequest} The request.
  * @param {Function} The callback function.
  */
-HttpManager.post = function(request, callback) {
+HttpManager.post = function (request, callback) {
   var options = _getParametersFromRequest(request);
   var method = superagent.post;
 
@@ -111,7 +126,7 @@ HttpManager.post = function(request, callback) {
  * @param {BaseRequest} The request.
  * @param {Function} The callback function.
  */
-HttpManager.del = function(request, callback) {
+HttpManager.del = function (request, callback) {
   var options = _getParametersFromRequest(request);
   var method = superagent.del;
 
@@ -123,7 +138,7 @@ HttpManager.del = function(request, callback) {
  * @param {BaseRequest} The request.
  * @param {Function} The callback function.
  */
-HttpManager.put = function(request, callback) {
+HttpManager.put = function (request, callback) {
   var options = _getParametersFromRequest(request);
   var method = superagent.put;
 
