@@ -7,25 +7,29 @@ setting the languch.json for debugger node.js
 languch node debuge on server/index.js
 2. start the react app debugger on port 3000
 setting the languch.json for languch chrom against on localhost
-npm start
+npm run start
 languch chrom against on localhost
 
 
 # [spotify-web-playback-sdk-example](https://github.com/spotify/spotify-web-playback-sdk-example/tree/main)
 ## Issue
 -- ["error:0308010C:digital envelope routines::unsupported"](https://github.com/spotify/spotify-web-playback-sdk-example/issues/9)
+```shell
 export NODE_OPTIONS="--openssl-legacy-provider"
-OR
+```
+Or
 setting launch.json
+```json
 "env":{
                 "NODE_OPTIONS":"--openssl-legacy-provider"
             }
-
+```
 
 #  spotify-web-api-node
 [How To Build A Better Spotify With React](https://www.youtube.com/watch?v=Xcet6msf3eE)
 [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node)
 npm i spotify-web-api-node
+
 
 ## Issues:
 - servre.js : blocked by CORS policy
