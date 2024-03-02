@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 
 // Proxy configuration
 const proxyUrl = 'http://127.0.0.1:7890';
+
+
 // Define proxy options
 const proxyOptions = {
   target: proxyUrl, // Replace with your target URL
@@ -72,8 +74,8 @@ the authorized request  http://localhost:3000/auth/callback just described above
 The callback contains two query parameters:  code  & state
 */
 
-
-  var scope = "streaming user-read-email user-read-private"
+  // https://developer.spotify.com/documentation/web-api/concepts/scopes
+  var scope = "streaming app-remote-control user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-email user-read-private"
   var state = generateRandomString(16);
 
   var auth_query_parameters = new URLSearchParams({
@@ -114,11 +116,6 @@ app.get('/auth/callback', (req, res) => {
     json: true
   };
 
-  /* 
-  [HPM] Error occurred while proxying request localhost:3000/auth/callback?code=AQC-vFmJEZNi9pyI0yzPpl4_REC4939K8sQGXaFVN1nB5Ko6Bq1fogRy_7yiPz0k_v7dr4vAk9ZeaCc3jsD5NCK4Pog7m5wVOWBXH5_SMMsCmjxHIYKFRkNpLMA_QVcDje3N5KrgZS6NIKBmC1wvcuC7PnUgNqfRoitXS0X7sCpt60K46dbEP6RitbfnxXy11xG731VdZ3xk14Su-BQrXMT1AN5A8z6UC030kqjw71GfKMKi-dY&state=snbQMQGzdzTMBzJf 
-  to http://localhost:5000/ [ECONNRESET] (https://nodejs.org/api/errors.html#errors_common_system_errors)
-ERROR: "server" exited with 1.
-  */
 
   request.post(authOptions, function (error, response, body) {
     if (!error && response.statusCode === 200) {

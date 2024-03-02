@@ -30,7 +30,7 @@ function WebPlayback(props) {
         window.onSpotifyWebPlaybackSDKReady = () => {
 
             const player = new window.Spotify.Player({
-                name: 'Web Playback SDK',
+                name: "Michael Web Playback SDK",
                 getOAuthToken: cb => { cb(props.token); },
                 volume: 0.5
             });
@@ -45,7 +45,7 @@ function WebPlayback(props) {
                 console.log('Device ID has gone offline', device_id);
             });
 
-            player.addListener('player_state_changed', ( state => {
+            player.addListener('player_state_changed', (state => {
 
                 if (!state) {
                     return;
@@ -54,8 +54,8 @@ function WebPlayback(props) {
                 setTrack(state.track_window.current_track);
                 setPaused(state.paused);
 
-                player.getCurrentState().then( state => { 
-                    (!state)? setActive(false) : setActive(true) 
+                player.getCurrentState().then(state => {
+                    (!state) ? setActive(false) : setActive(true)
                 });
 
             }));
@@ -65,7 +65,7 @@ function WebPlayback(props) {
         };
     }, []);
 
-    if (!is_active) { 
+    if (!is_active) {
         return (
             <>
                 <div className="container">
@@ -91,7 +91,7 @@ function WebPlayback(props) {
                             </button>
 
                             <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
-                                { is_paused ? "PLAY" : "PAUSE" }
+                                {is_paused ? "PLAY" : "PAUSE"}
                             </button>
 
                             <button className="btn-spotify" onClick={() => { player.nextTrack() }} >
