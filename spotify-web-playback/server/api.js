@@ -66,44 +66,6 @@ app.get('/auth/callback', (req, res) => {
     var code = req.query.code || null;
     var state = req.query.state || null;
 
-    /*    var authOptions = {
-           url: API_TOKEN_URL,
-           proxy: proxyUrl, // add explict proxy 
-           form: {
-               code: code,
-               redirect_uri: spotify_redirect_uri,
-               grant_type: 'authorization_code'
-           },
-           headers: {
-               'Authorization': 'Basic ' + (Buffer.from(spotify_client_id + ':' + spotify_client_secret).toString('base64')),
-               'Content-Type': 'application/x-www-form-urlencoded'
-           },
-           json: true
-       };
-   
-   
-       request.post(authOptions, function (error, response, body) {
-           if (!error && response.statusCode === 200) {
-               access_token = body.access_token;
-               refresh_token = body.refresh_token
-               console.log("Success to get Access token");
-               console.log('The token expires in ' + body.expires_in);
-               console.log('The access token is ' + access_token);
-               console.log('The refresh token is ' + refresh_token);
-   
-               // Set the access token on the API object to use it in later calls
-               spotifyApi.setAccessToken(access_token);
-               spotifyApi.setRefreshToken(refresh_token);
-   
-               // get web sdk device_id
-               //  When the server responds with res.redirect('/'), it's instructing the client's browser 
-               // to navigate to the root URL of the server, which is typically where your React application is served.
-               res.redirect('/')
-           } else {
-               console.log(error);
-           } */
-
-
     // Retrieve an access token and a refresh token
     spotifyApi.authorizationCodeGrant(code).then(
         function (data) {
@@ -114,6 +76,10 @@ app.get('/auth/callback', (req, res) => {
             // Set the access token on the API object to use it in later calls
             spotifyApi.setAccessToken(data.body['access_token']);
             spotifyApi.setRefreshToken(data.body['refresh_token']);
+
+            access_token = data.body['access_token']
+            refresh_token = data.body['refresh_token']
+            res.redirect('/')
         },
         function (err) {
             console.log('Something went wrong!', err);
@@ -125,6 +91,21 @@ app.get('/auth/token', (req, res) => {
     res.json({ access_token: access_token })
 })
 
+app.get('/api/get_device_id', (req, res) => {
+    // Get a User's Available Devices
+    spotifyApi.getMyDevices()
+        .then(function (data) {
+            let availableDevices = data.body.devices;
+            // for (let i = 0; i < availableDevices.length; i++) {
+            //     console.log(availableDevices[i]);
+            // }
+            // Return the array as a JSON response
+            res.json(availableDevices)
+
+        }, function (err) {
+            console.log('Something went wrong!', err);
+        });
+})
 
 app.listen(port, () => {
     console.log(`Spotify API server listening at http://localhost:${port}`)
