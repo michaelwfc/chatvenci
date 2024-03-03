@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import WebPlayback from './WebPlayback'
 import Login from './Login'
+import WebPlayback from './WebPlayback'
+import Dashboard from './Dashboard';
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
   return (
     <>
       {(token === '') ? <Login /> : <WebPlayback token={token} />}
+      {/* {(token === '') ? <Login /> : <Dashboard token={token} />} */}
     </>
   );
 }
