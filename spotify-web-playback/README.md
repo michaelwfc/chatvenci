@@ -13,10 +13,15 @@ languch chrom against on localhost
 # Javacript Tutorial
 https://javascript.info/
 
+#  spotify-web-api-node
+[How To Build A Better Spotify With React](https://www.youtube.com/watch?v=Xcet6msf3eE)
+[spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node)
+npm i spotify-web-api-node
 
-# [spotify-web-playback-sdk-example](https://github.com/spotify/spotify-web-playback-sdk-example/tree/main)
+
+
 ## Issue
--- ["error:0308010C:digital envelope routines::unsupported"](https://github.com/spotify/spotify-web-playback-sdk-example/issues/9)
+- ["error:0308010C:digital envelope routines::unsupported"](https://github.com/spotify/spotify-web-playback-sdk-example/issues/9)
 ```shell
 export NODE_OPTIONS="--openssl-legacy-provider"
 ```
@@ -24,24 +29,21 @@ Or
 setting launch.json
 ```json
 "env":{
-                "NODE_OPTIONS":"--openssl-legacy-provider"
+       "NODE_OPTIONS":"--openssl-legacy-provider"
             }
 ```
-
-#  spotify-web-api-node
-[How To Build A Better Spotify With React](https://www.youtube.com/watch?v=Xcet6msf3eE)
-[spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node)
-npm i spotify-web-api-node
-
-
-## Issues:
 - servre.js : blocked by CORS policy
 Access to XMLHttpRequest at 'http://localhost:3001/' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 npm i cors
 
 - req.body.code: TypeError: Cannot read properties of undefined (reading 'code')
 npm i body-parser
+
+
+
 ----------------------------------------------------------------
+# [spotify-web-playback-sdk-example](https://github.com/spotify/spotify-web-playback-sdk-example/tree/main)
+
 # Web Playback SDK Javascript Tutorial
 
 This repository contains the source code for the [Web Playback SDK Guide](https://developer.spotify.com/documentation/web-playback-sdk/guide/).
@@ -85,10 +87,5 @@ npm run dev
 ```
 
 The React application will start on `http://localhost:3000`
-
-## Resources
-
-- Follow [@SpotifyPlatform](https://twitter.com/SpotifyPlatform) on Twitter for Spotify for Developers updates.
-- Join the [Spotify for Developers Community Forum](https://community.spotify.com/t5/Spotify-for-Developers/bd-p/Spotify_Developer).
 
 
