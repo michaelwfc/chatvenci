@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const { getProxySetting, setGlobalProxy, generateRandomString } = require('./utils');
 
+const WEB_PLAYBACK_SKD = "Michael Web Playback SDK" // process.env.WEB_PLAYBAK_SDK
 
 // var SpotifyWebApi = require('spotify-web-api-node');
 var SpotifyWebApi = require("./spotify_web_api/server")
@@ -77,12 +78,13 @@ app.get('/auth/callback', (req, res) => {
             spotifyApi.setAccessToken(data.body['access_token']);
             spotifyApi.setRefreshToken(data.body['refresh_token']);
 
-            access_token = data.body['access_token']
-            refresh_token = data.body['refresh_token']
-            res.redirect('/')
+            access_token = data.body['access_token'];
+            refresh_token = data.body['refresh_token'];
+            res.redirect('/');
+            console.log("redirect to root");
         },
         function (err) {
-            console.log('Something went wrong!', err);
+            // console.log('Something went wrong!', err);
 
         })
 })
@@ -91,8 +93,36 @@ app.get('/auth/token', (req, res) => {
     res.json({ access_token: access_token })
 })
 
+
+app.post("/auth/refresh", (req, res) => {
+    /*  
+    https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
+    */
+    const refreshToken = req.body.refreshToken
+    const spotifyApi = new SpotifyWebApi({
+        redirectUri: process.env.REDIRECT_URI,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: refreshToken,
+    })
+
+    spotifyApi
+        .refreshAccessToken()
+        .then(data => {
+            res.json({
+                accessToken: data.body.accessToken,
+                expiresIn: data.body.expiresIn,
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            res.sendStatus(400)
+        })
+})
+
+
 app.get('/api/get_device_id', (req, res) => {
-    // Get a User's Available Devices
+    // Get a User's Available Devices  
     spotifyApi.getMyDevices()
         .then(function (data) {
             let availableDevices = data.body.devices;
@@ -105,6 +135,45 @@ app.get('/api/get_device_id', (req, res) => {
         }, function (err) {
             console.log('Something went wrong!', err);
         });
+})
+
+app.put('/api/transfer_playback', (req, res) => {
+    // curl --request PUT http://localhost:5000/api/transfer_playback
+    spotifyApi.getMyDevices()
+        .then(function (data) {
+            let availableDevices = data.body.devices;
+            // get the web skd device id
+            for (let i = 0; i < availableDevices.length; i++) {
+                if (availableDevices[i].name === WEB_PLAYBACK_SKD) {
+                    deviceId = availableDevices[i].id;
+                    console.log("get device_id for web playback sdk: " + deviceId);
+                    break;
+                }
+                else {
+                    console.log("available device name: " + availableDevices[i].name);
+                    deviceId = null;
+                }
+            }
+            if (deviceId !== null && typeof deviceId === "string") {
+                spotifyApi.transferMyPlayback(deviceIds = [deviceId], options = { "play": true })
+                    .then(function () {
+                        console.log('Transfering playback to ' + deviceId);
+                        // res.redirect('/');
+                        res.json("success");
+                    }, function (err) {
+                        //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+                        console.log('Something went wrong in transferMyPlayback!', err);
+                        res.json("failure");
+                    });
+            }
+            else {
+                console.log("get None device_id for " + WEB_PLAYBACK_SKD)
+            }
+
+        })
+        .catch(function (err) {
+            console.log('Something went wrong when in /api/transfer_playback!', err);
+        })
 })
 
 app.listen(port, () => {
