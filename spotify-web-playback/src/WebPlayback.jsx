@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+const dotenv = require('dotenv');
+
+dotenv.config()
+
+const WEB_PLAYBACK_SKD = "Michael Web Playback SDK" // process.env.WEB_PLAYBAK_SDK
+
 
 const track = {
     name: "",
@@ -28,9 +35,9 @@ function WebPlayback(props) {
         document.body.appendChild(script);
 
         window.onSpotifyWebPlaybackSDKReady = () => {
-
+            console.log("Spotify Web Playback SDK Ready");
             const player = new window.Spotify.Player({
-                name: "Michael Web Playback SDK",
+                name: WEB_PLAYBACK_SKD,// process.env.WEB_PLAYBACK_SDK,
                 getOAuthToken: cb => { cb(props.token); },
                 volume: 0.5
             });
@@ -64,6 +71,21 @@ function WebPlayback(props) {
 
         };
     }, []);
+
+
+    // if (!is_active) {
+    //     const access_token = props.token;
+    //     // if token ,we want to acitive the webPlayback
+    //     axios.put("/api/transfer_playback", { access_token })
+    //         .then(playback_status => {
+    //             console.log('playback_status:', playback_status);
+    //             (playback_status !== "success") ? setActive(false) : setActive(true);
+    //         })
+    //         .catch((error) => {
+    //             console.log('active curretn web playback sdk', error);
+
+    //         });
+    // }
 
     if (!is_active) {
         return (
