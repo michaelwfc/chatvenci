@@ -1,4 +1,4 @@
-const { getProxySetting, generateRandomString } = require('./utils');
+const { getProxySetting, generateRandomString, schedule_refresh_token } = require('./utils');
 
 
 getProxySetting();

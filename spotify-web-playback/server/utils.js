@@ -1,8 +1,9 @@
 const { getProxyForUrl, proxyFromEnv } = require('proxy-from-env');
 const http = require('http');
 const https = require('https');
-
-
+const cron = require('node-cron');
+const axios = require('axios');
+const { ACCESS_TOKEN, REFRESH_TOKEN } = require('./constants');
 
 function getProxySetting() {
     // URL to check proxy settings for
@@ -45,10 +46,37 @@ var generateRandomString = function (length) {
 };
 
 
+// Schedule a task to run every minute
+var schedule_refresh_token = function (schedule_interval = '*/50 * * * *') {
+    cron.schedule(schedule_interval, () => {
+        console.log("start by scheduler at " + Date());
+        const refresh_token = global.refresh_token
+
+        axios.post('http://localhost:5000/auth/refresh_token', { "refreshToken": refresh_token },
+            {
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => {
+                access_token = response.data[ACCESS_TOKEN];
+                refresh_token = response.data[REFRESH_TOKEN];
+                console.log("refreshed by scheduler" + refresh_token);
+                console.log("access_token: " + access_token);
+                console.log("refresh token: " + refresh_token);
+                return response.data
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+}
+
+
+
+
 // export default getProxySetting;
 module.exports = {
     getProxySetting,
     setGlobalProxy,
     generateRandomString,
-
+    schedule_refresh_token
 };

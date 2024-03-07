@@ -6,42 +6,38 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const request = require('request');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
-const { getProxySetting, setGlobalProxy, generateRandomString } = require('./utils');
+const { getProxySetting, setGlobalProxy, generateRandomString, schedule_refresh_token } = require('./utils');
 
-const WEB_PLAYBACK_SKD = "Michael Web Playback SDK" // process.env.WEB_PLAYBAK_SDK
+const { WEB_PLAYBACK_SKD, AUTHORIZATION_URL, API_TOKEN_URL, SPOTIFY_REDIRECT_URI,
+    ACCESS_TOKEN, EXPIRES_IN, REFRESH_TOKEN, PORT, DEFAULT_PROXY } = require("./constants")
 
 // var SpotifyWebApi = require('spotify-web-api-node');
 var SpotifyWebApi = require("./spotify_web_api/server")
 
 
-const port = 5000
-
-const AUTHORIZATION_URL = 'https://accounts.spotify.com/authorize/?'
-const API_TOKEN_URL = 'https://accounts.spotify.com/api/token';
-var spotify_redirect_uri = 'http://localhost:3000/auth/callback'
-
-// Proxy configuration
-DEFAULT_PROXY = 'http://127.0.0.1:7890';
-
 global.access_token = ''
+global.refresh_token = ''
 
 dotenv.config();
 
 // setGlobalProxy();
 
 var app = express();
-
+// uses body-parser middleware to parse the request body as JSON.
+app.use(bodyParser.json());
 
 var spotify_client_id = process.env.SPOTIFY_CLIENT_ID
 var spotify_client_secret = process.env.SPOTIFY_CLIENT_SECRET
 var scopes = "streaming app-remote-control user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-email user-read-private".split(" ")
 var state = generateRandomString(16);
 
+
+
 // credentials are optional
 var spotifyApi = new SpotifyWebApi({
     clientId: spotify_client_id,
     clientSecret: spotify_client_secret,
-    redirectUri: spotify_redirect_uri
+    redirectUri: SPOTIFY_REDIRECT_URI
 });
 
 // // Set proxy settings for the superagent instance
@@ -70,16 +66,20 @@ app.get('/auth/callback', (req, res) => {
     // Retrieve an access token and a refresh token
     spotifyApi.authorizationCodeGrant(code).then(
         function (data) {
-            console.log('The token expires in ' + data.body['expires_in']);
-            console.log('The access token is ' + data.body['access_token']);
-            console.log('The refresh token is ' + data.body['refresh_token']);
+            console.log('The token expires in ' + data.body[EXPIRES_IN]);
+            console.log('The access token is ' + data.body[ACCESS_TOKEN]);
+            console.log('The refresh token is ' + data.body[REFRESH_TOKEN]);
 
             // Set the access token on the API object to use it in later calls
-            spotifyApi.setAccessToken(data.body['access_token']);
-            spotifyApi.setRefreshToken(data.body['refresh_token']);
+            spotifyApi.setAccessToken(data.body[ACCESS_TOKEN]);
+            spotifyApi.setRefreshToken(data.body[REFRESH_TOKEN]);
 
-            access_token = data.body['access_token'];
-            refresh_token = data.body['refresh_token'];
+            access_token = data.body[ACCESS_TOKEN];
+            refresh_token = data.body[REFRESH_TOKEN];
+
+            // schedule_refresh_token(refresh_token);
+            schedule_refresh_token()
+
             res.redirect('/');
             console.log("redirect to root");
         },
@@ -94,24 +94,26 @@ app.get('/auth/token', (req, res) => {
 })
 
 
-app.post("/auth/refresh", (req, res) => {
+app.post("/auth/refresh_token", (req, res) => {
     /*  
     https://developer.spotify.com/documentation/web-api/tutorials/refreshing-tokens
     */
     const refreshToken = req.body.refreshToken
     const spotifyApi = new SpotifyWebApi({
-        redirectUri: process.env.REDIRECT_URI,
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
+        redirectUri: SPOTIFY_REDIRECT_URI,
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         refreshToken: refreshToken,
     })
 
     spotifyApi
         .refreshAccessToken()
         .then(data => {
+            // Send the dictionary data back as JSON
             res.json({
-                accessToken: data.body.accessToken,
-                expiresIn: data.body.expiresIn,
+                access_token: data.body.access_token,
+                expires_in: data.body.expires_in,
+                refresh_token: data.body.refresh_token || refresh_token,
             })
         })
         .catch(err => {
@@ -122,6 +124,7 @@ app.post("/auth/refresh", (req, res) => {
 
 
 app.get('/api/get_device_id', (req, res) => {
+    spotifyApi.setAccessToken(access_token);
     // Get a User's Available Devices  
     spotifyApi.getMyDevices()
         .then(function (data) {
@@ -139,6 +142,7 @@ app.get('/api/get_device_id', (req, res) => {
 
 app.put('/api/transfer_playback', (req, res) => {
     // curl --request PUT http://localhost:5000/api/transfer_playback
+    spotifyApi.setAccessToken(access_token);
     spotifyApi.getMyDevices()
         .then(function (data) {
             let availableDevices = data.body.devices;
@@ -176,6 +180,9 @@ app.put('/api/transfer_playback', (req, res) => {
         })
 })
 
-app.listen(port, () => {
-    console.log(`Spotify API server listening at http://localhost:${port}`)
+
+
+
+app.listen(PORT, () => {
+    console.log(`Spotify API server listening at http://localhost:${PORT}`)
 })
